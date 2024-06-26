@@ -6,6 +6,8 @@ import collections
 
 import decimal
 
+
+
 # Float to Decimal helper
 def float2dec(ft, decimal_digits):
     """
@@ -117,7 +119,10 @@ class PackerBNFMixin(object):
             # we have at least one open bin, so check if it can hold this rect
             rect = self._open_bins[0].add_rect(width, height, rid=rid)
             if rect is not None:
-                return rect
+                start_x, start_y, cur_w, cur_h = rect.x, rect.y, rect.width, rect.height
+                if width != cur_w:
+                    rot = True
+                return rect, rot
 
             # since the rect doesn't fit, close this bin and try again
             closed_bin = self._open_bins.popleft()
@@ -547,6 +552,7 @@ def newPacker(mode=PackingMode.Offline,
         sort_algo=None
         if bin_algo == PackingBin.BNF:
             packer_class = PackerOnlineBNF
+            # packer_class = MyPackerBNFMixin
         elif bin_algo == PackingBin.BFF:
             packer_class = PackerOnlineBFF
         elif bin_algo == PackingBin.BBF:

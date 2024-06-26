@@ -183,10 +183,14 @@ class Skyline(PackingAlgorithm):
         """
         positions = self._generate_placements(width, height)
         if self.rot and width != height:
-            positions += self._generate_placements(height, width)
+            positions += self._generate_placements(height, width)  # 所有可能位置
         if not positions:
             return None, None
-        return min(((p[0], self._rect_fitness(*p))for p in positions), 
+        print(positions)
+        b = min(((p[0], self._rect_fitness(*p))for p in positions),
+                key=operator.itemgetter(1))
+        # print(111, b)
+        return min(((p[0], self._rect_fitness(*p))for p in positions),
                 key=operator.itemgetter(1))
 
     def fitness(self, width, height):
@@ -223,7 +227,8 @@ class Skyline(PackingAlgorithm):
 
         # Get best possible rectangle position
         if not rect:
-            rect, _ = self._select_position(width, height)
+            rect, _ = self._select_position(width, height)  #左侧
+            print('rect:', rect)
             if rect:
                 self._add_skyline(rect)
 
